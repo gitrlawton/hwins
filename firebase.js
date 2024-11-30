@@ -32,7 +32,15 @@ const db = getFirestore(app);
  * @returns {string} - Sanitized URL suitable for Firestore document ID
  */
 function sanitizeUrlForDocumentId(url) {
-  // Remove protocol, replace slashes with underscores
+  // Extract the part after 'software/'
+  const match = url.match(/\/software\/(.+)$/);
+  if (match && match[1]) {
+    return match[1]
+      .replace(/[^a-zA-Z0-9_-]/g, "") // Remove any other special characters
+      .substring(0, 256); // Firestore has a 256-character limit
+  }
+
+  // Fallback to previous method if no match
   return url
     .replace(/^https?:\/\//, "") // Remove http:// or https://
     .replace(/\//g, "_") // Replace remaining slashes with underscores
