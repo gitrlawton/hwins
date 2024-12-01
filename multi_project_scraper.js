@@ -83,32 +83,46 @@ async function scrapeMultipleProjects() {
 
       console.log(`Total project links found: ${projectLinks.length}`);
 
-      // Limit to first 3 projects
-      for (let i = 0; i < Math.min(3, projectLinks.length); i++) {
-        try {
-          console.log(`Attempting to click on project link ${i + 1}`);
-
-          // Get href directly instead of clicking
-          const projectUrl = await page.evaluate(
-            (el) => el.href,
-            projectLinks[i]
+      /// Collect project URLs and thumbnails
+      const projectData = await page.evaluate(() => {
+        const items = document.querySelectorAll(
+          ".block-wrapper-link.fade.link-to-software"
+        );
+        return Array.from(items).map((item) => {
+          const thumbnailImg = item.querySelector(
+            ".software_thumbnail_image.image-replacement"
           );
+          return {
+            url: item.href,
+            thumbnailUrl: thumbnailImg ? thumbnailImg.src : null,
+          };
+        });
+      });
 
-          // Log the project URL
+      // Limit to first 3 projects
+      for (let i = 0; i < Math.min(3, projectData.length); i++) {
+        try {
+          const { url: projectUrl, thumbnailUrl } = projectData[i];
+
+          // Log the project URL and thumbnail
           console.log(`=== Scraping Project ${i + 1} ===`);
           console.log(`Project URL: ${projectUrl}`);
+          console.log(`Thumbnail URL: ${thumbnailUrl}`);
 
           // Extract project name from URL for additional logging
           const projectNameFromUrl = projectUrl.split("/").pop();
           console.log(`Project Name from URL: ${projectNameFromUrl}`);
 
-          // Scrape the project
+          // Scrape the project with thumbnail
           console.log("Calling scrapeAndWriteSingleProject...");
-          const projectData = await scrapeAndWriteSingleProject(projectUrl);
-          console.log(`Successfully scraped: ${projectData.project_name}`);
+          const projectDetails = await scrapeAndWriteSingleProject(
+            projectUrl,
+            thumbnailUrl
+          );
+          console.log(`Successfully scraped: ${projectDetails.project_name}`);
 
           // Add to scraped projects
-          scrapedProjects.push(projectData);
+          scrapedProjects.push(projectDetails);
 
           // Add a small delay between scrapes to reduce potential rate limiting
           await page.waitForTimeout(2000);

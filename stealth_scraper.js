@@ -229,6 +229,15 @@ async function scrapeProject(url) {
         document.querySelector('[id^="app-title"]')?.textContent.trim() ||
         "";
 
+      // Project Date
+      const timeElement = document.querySelector("time.timeago");
+      const fullDateString = timeElement
+        ? timeElement.getAttribute("title")
+        : null;
+      const projectDate = fullDateString
+        ? fullDateString.split(" ").slice(0, 3).join(" ") // Takes "Nov 25, 2024" part
+        : null;
+
       // Log Line
       const logLine =
         document.querySelector("p.large")?.textContent.trim() ||
@@ -371,6 +380,7 @@ async function scrapeProject(url) {
         hackathon_names: hackathonNames,
         tech_stack: techStack,
         creators: creators,
+        project_date: projectDate,
       };
     }, url);
 
@@ -387,12 +397,12 @@ async function scrapeProject(url) {
   }
 }
 
-async function scrapeAndWriteSingleProject(url) {
+async function scrapeAndWriteSingleProject(pageUrl, thumbnailUrl) {
   try {
     console.time("Total Scrape Time");
 
     // Step 1: Scrape the project
-    const projectData = await scrapeProject(url);
+    const projectData = await scrapeProject(pageUrl);
 
     // Step 2: Extract project features with timeout
     console.log("Extracting project features...");
@@ -424,7 +434,10 @@ async function scrapeAndWriteSingleProject(url) {
     ]);
     projectData.tags = tags;
 
-    // Step 4: Write to Firestore with timeout
+    // Step 4: Add thumbnail URL to projectData
+    projectData.thumbnail_url = thumbnailUrl;
+
+    // Step 5: Write to Firestore with timeout
     console.log("Writing project to Firestore...");
     const firestorePromise = writeProjectToFirestore(projectData);
     await Promise.race([

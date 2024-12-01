@@ -1,0 +1,73 @@
+[
+  {
+    "id": "1",
+    "title": "AI-Powered Health Assistant",
+    "description": "A virtual health assistant that uses AI to provide personalized health recommendations",
+    "thumbnailUrl": "/placeholder.svg?height=64&width=64",
+    "videoUrl": "https://example.com/video1",
+    "hackathon": "The AI Hackathon",
+    "categories": ["Healthcare", "AI/ML"],
+    "features": [
+      "Real-time monitoring",
+      "Personalized recommendations",
+      "Health tracking"
+    ],
+    "techStack": ["Python", "TensorFlow", "React", "Node.js"],
+    "creators": [
+      {
+        "id": "c1",
+        "name": "Sarah Chen",
+        "avatar": "/placeholder.svg"
+      }
+    ],
+    "dateWon": "2023-12-06",
+    "awards": ["Best Healthcare Solution", "Most Innovative Use of AI"],
+    "summary": "Our AI-Powered Health Assistant leverages cutting-edge machine learning algorithms to provide users with personalized health recommendations. By analyzing user data and health patterns, the assistant offers real-time monitoring, tailored advice, and comprehensive health tracking, ultimately empowering individuals to make informed decisions about their well-being."
+  },
+  {
+    "id": "2",
+    "title": "Smart Agriculture System",
+    "description": "A system that uses IoT sensors and machine learning to optimize crop yields",
+    "thumbnailUrl": "/placeholder.svg?height=64&width=64",
+    "videoUrl": "https://example.com/video2",
+    "hackathon": "The IoT Hackathon",
+    "categories": ["Agriculture", "IoT"],
+    "features": [
+      "Real-time monitoring",
+      "Predictive analytics",
+      "Automated irrigation"
+    ],
+    "techStack": ["Python", "TensorFlow", "Node.js", "Arduino"],
+    "creators": [
+      {
+        "id": "c2",
+        "name": "John Doe",
+        "avatar": "/placeholder.svg"
+      }
+    ],
+    "dateWon": "2023-11-15",
+    "awards": ["Best Agriculture Solution", "Most Sustainable Project"],
+    "summary": "Our Smart Agriculture System revolutionizes farming by integrating IoT sensors and machine learning algorithms. This innovative solution provides real-time monitoring of crop conditions, predictive analytics for optimal resource allocation, and automated irrigation systems. By optimizing crop yields and reducing resource waste, we're paving the way for more sustainable and efficient agricultural practices."
+  },
+  {
+    "id": "3",
+    "title": "Environmental Monitoring System",
+    "description": "A system that uses sensors to monitor environmental conditions and alert authorities to potential hazards",
+    "thumbnailUrl": "/placeholder.svg?height=64&width=64",
+    "videoUrl": "https://example.com/video3",
+    "hackathon": "The Sustainability Hackathon",
+    "categories": ["Environment", "IoT"],
+    "features": ["Real-time monitoring", "Data visualization", "Alert system"],
+    "techStack": ["Python", "Node.js", "Raspberry Pi"],
+    "creators": [
+      {
+        "id": "c3",
+        "name": "Jane Smith",
+        "avatar": "/placeholder.svg"
+      }
+    ],
+    "dateWon": "2023-10-22",
+    "awards": ["Best Environmental Solution", "Most impactful Project"],
+    "summary": "Our Environmental Monitoring System is a comprehensive solution designed to safeguard our ecosystems. By deploying a network of advanced sensors, we continuously monitor various environmental parameters. The system processes this data in real-time, providing intuitive visualizations and triggering alerts to relevant authorities when potential hazards are detected. This proactive approach enables swift responses to environmental threats, contributing to a safer and more sustainable future."
+  }
+]
