@@ -1,11 +1,13 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const StarfieldBackground = () => {
   const canvasRef = useRef(null);
   const starsRef = useRef([]);
   const wordsRef = useRef([]);
+  const animationFrameRef = useRef(null);
+  const [isLargeScreen, setIsLargeScreen] = useState(false);
 
   // Define a list of words to display
   const words = [
@@ -109,13 +111,39 @@ const StarfieldBackground = () => {
     "just a chill bill",
   ];
 
+  // Add a minimum screen size check
+  const isValidScreenSize = () => {
+    return window.innerWidth >= 1024; // Tailwind's 'lg' breakpoint
+  };
+
   useEffect(() => {
+    // Handle screen size changes
+    const checkScreenSize = () => {
+      setIsLargeScreen(isValidScreenSize());
+    };
+
+    // Initial check
+    checkScreenSize();
+
+    // Add event listener for resize
+    window.addEventListener("resize", checkScreenSize);
+
+    // Cleanup
+    return () => {
+      window.removeEventListener("resize", checkScreenSize);
+    };
+  }, []);
+
+  useEffect(() => {
+    // Only run if it's a large screen
+    if (!isLargeScreen) return;
+
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
-    let animationFrameId;
 
     // Set canvas size to window size
     const setCanvasSize = () => {
+      if (!isValidScreenSize()) return;
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
     };
@@ -133,6 +161,24 @@ const StarfieldBackground = () => {
         });
       }
       starsRef.current = stars;
+    };
+
+    // Debounce resize to prevent multiple rapid calls
+    let resizeTimeout;
+    const handleResize = () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        if (isValidScreenSize()) {
+          setCanvasSize();
+          // Only reinitialize if necessary
+          starsRef.current = []; // Force reinit of stars
+          initStars();
+
+          // Clear existing words and reinit with fewer words
+          wordsRef.current = [];
+          initWords(5); // Fewer words on resize
+        }
+      }, 250); // 250ms debounce
     };
 
     // Initialize words
@@ -284,7 +330,7 @@ const StarfieldBackground = () => {
         }
       });
 
-      animationFrameId = requestAnimationFrame(animate);
+      animationFrameRef.current = requestAnimationFrame(animate);
     };
 
     // Initialize
@@ -299,27 +345,25 @@ const StarfieldBackground = () => {
     animate();
 
     // Handle resize
-    window.addEventListener("resize", () => {
-      setCanvasSize();
-      initStars();
-      initWords();
-    });
+    window.addEventListener("resize", handleResize);
 
     // Cleanup
     return () => {
-      window.removeEventListener("resize", setCanvasSize);
-      cancelAnimationFrame(animationFrameId);
-      clearTimeout(wordInitTimeout); // Clean up the timeout
+      window.removeEventListener("resize", handleResize);
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
+      clearTimeout(wordInitTimeout);
     };
-  }, []);
+  }, [isLargeScreen]);
 
-  return (
+  return isValidScreenSize() ? (
     <canvas
       ref={canvasRef}
       className="fixed top-0 left-0 w-full h-full -z-10"
       style={{ background: "rgb(2, 0, 36)" }}
     />
-  );
+  ) : null;
 };
 
 export default StarfieldBackground;

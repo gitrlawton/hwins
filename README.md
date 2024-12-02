@@ -1,36 +1,38 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Hwins
 
-## Getting Started
+## Overview
 
-First, run the development server:
+"Hwins" is my submission to the [Brainrot Hackathon](https://brainrot-jia-seed-hackathon.devpost.com/) for the cvrve track.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+This project is a winning hackathon project aggregator, showcasing innovative solutions developed during various hackathons. It consists of a web application that allows users to explore, filter, and search through a collection of winning projects, complete with the demo video, awards won, a project feature list, and creator information.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The project is built using React and integrates with Firebase for data storage and retrieval. It also utilizes Puppeteer for web scraping to gather project data from Devpost.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## Features
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Filtering Options**: Users can filter projects by categories such as Social Good, Machine Learning, Education, and more.
+- **Sorting**: Projects can be sorted by alphabetical order or by the most recent submissions.
+- **Project Details**: Each project card displays essential information, including project name, awards won, hackathon entered, features, and creators.
+- **Responsive Design**: The application is designed to be mobile-friendly, ensuring a seamless experience across devices.
 
-## Learn More
+## File Descriptions
 
-To learn more about Next.js, take a look at the following resources:
+- **app/page.js**: The main application file that handles project fetching, filtering, and rendering.
+- **components/custom/FilterModal.js**: A modal component for selecting project categories to filter the displayed projects.
+- **components/custom/ProjectCard.js**: A component that displays individual project details in an expanded card view.
+- **firebase.js**: Configuration file for Firebase, handling database interactions.
+- **stealth_scraper.js**: Script for scraping single project data from Devpost using Puppeteer.
+- **multi_project_scraper.js**: Script for scraping multiple projects in a batch process.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Dependencies
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **React**: For building the user interface.
+- **Firebase**: For data storage and authentication.
+- **Puppeteer**: For web scraping project data from Devpost.
+- **Lucide-react**: For icons used in the application.
+- **Next.js**: For server-side rendering and routing.
+- **Tailwind CSS**: For styling the application.
 
-## Deploy on Vercel
+## Contributing
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Contributions are welcome! Please feel free to submit a pull request or open an issue for any suggestions or improvements.
