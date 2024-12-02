@@ -97,7 +97,7 @@ async function extractProjectFeatures(whatItDoesText, inspirationText = null) {
   }
 }
 
-async function generateProjectTags(whatItDoesText, inspirationText) {
+async function generateProjectTags(whatItDoesText, inspirationText, logLine) {
   const predefinedTags = [
     "Social Good",
     "Machine Learning/AI",
@@ -110,21 +110,24 @@ async function generateProjectTags(whatItDoesText, inspirationText) {
     "Fintech",
     "Mobile",
     "Health",
-    "Communication",
     "AR/VR",
     "IoT",
     "DevOps",
     "Cybersecurity",
     "Lifehacks",
     "E-commerce/Retail",
-    "Voice skills",
+    "Language/Translation",
     "Music/Art",
     "COVID-19",
     "Robotics",
     "Quantum",
     "Sustainability",
     "Sports/Fitness",
-    "Hardware",
+    "Agriculture",
+    "Accessibility",
+    "Data Visualization",
+    "Space",
+    "Supply Chain/Logistics",
   ];
 
   const prompt = `Analyze the following project description and inspiration text.  Based on this information, determine the 
@@ -134,10 +137,12 @@ async function generateProjectTags(whatItDoesText, inspirationText) {
 
   Inspiration: ${inspirationText}
 
+  Additional Context: ${logLine}
+
   Available Tags: ${predefinedTags.join(", ")}
 
   Guidelines:
-  - Select 3-5 tags that best capture the project's essence
+  - Select the tags that best capture the project's essence
   - Consider both technical and social aspects
   - Focus on the project's core mission and innovative approach
   - Provide ONLY the tags as a comma-separated list
@@ -154,12 +159,6 @@ async function generateProjectTags(whatItDoesText, inspirationText) {
         },
       ],
     });
-
-    // Log the full raw response to stderr
-    // console.error(
-    //   "Full AI Response for Tags:",
-    //   response.choices[0].message.content
-    // );
 
     // Extract just the tags, removing any extra text
     const rawResponse = response.choices[0].message.content.trim();
@@ -260,11 +259,8 @@ async function scrapeProject(url) {
         );
 
       // Video URL
-      const videoIframe = document.querySelector('iframe[src*="youtube.com"]');
-      const videoUrl = videoIframe
-        ? "https://youtube.com/watch?v=" +
-          videoIframe.src.split("/").pop().split("?")[0]
-        : null;
+      const videoIframe = document.querySelector("iframe");
+      const videoUrl = videoIframe?.src || null;
 
       // Inspiration Text
       const inspirationHeading = Array.from(
@@ -273,18 +269,23 @@ async function scrapeProject(url) {
       const inspirationText = inspirationHeading
         ? inspirationHeading.nextElementSibling?.tagName === "P"
           ? inspirationHeading.nextElementSibling.textContent.trim()
-          : null
-        : null;
+          : ""
+        : "";
 
       // What it does Text
       const whatItDoesHeading = Array.from(
-        document.querySelectorAll("h2")
-      ).find((el) => el.textContent.trim().toLowerCase() === "what it does");
+        document.querySelectorAll("h1, h2")
+      ).find((el) => {
+        const headingText = el.textContent.trim().toLowerCase();
+        return headingText.includes("what") && headingText.includes("does");
+      });
 
       let whatItDoesText = "";
       if (whatItDoesHeading) {
         let currentElement = whatItDoesHeading.nextElementSibling;
-        const nextHeading = Array.from(document.querySelectorAll("h2")).find(
+        const nextHeading = Array.from(
+          document.querySelectorAll("h1, h2")
+        ).find(
           (el) =>
             el.textContent.trim().toLowerCase() !== "what it does" &&
             el.compareDocumentPosition(whatItDoesHeading) ===
@@ -299,7 +300,10 @@ async function scrapeProject(url) {
         ) {
           if (currentElement.tagName === "P") {
             whatItDoesText += currentElement.textContent.trim() + " ";
-          } else if (currentElement.tagName === "UL") {
+          } else if (
+            currentElement.tagName === "UL" ||
+            currentElement.tagName === "OL"
+          ) {
             whatItDoesText +=
               Array.from(currentElement.querySelectorAll("li"))
                 .map((li) => li.textContent.trim())
@@ -404,27 +408,35 @@ async function scrapeAndWriteSingleProject(pageUrl, thumbnailUrl) {
     // Step 1: Scrape the project
     const projectData = await scrapeProject(pageUrl);
 
-    // Step 2: Extract project features with timeout
-    console.log("Extracting project features...");
-    const featuresPromise = extractProjectFeatures(
-      projectData.what_it_does_text
-    );
-    const features = await Promise.race([
-      featuresPromise,
-      new Promise((_, reject) =>
-        setTimeout(
-          () => reject(new Error("Features extraction timed out")),
-          10000
-        )
-      ),
-    ]);
-    projectData.features = features;
+    // Step 2: Extract project features if whatItDoesText exists
+    console.log("Preparing to extract project features...");
+    console.log("Checking for project description...");
+    if (projectData.what_it_does_text !== "") {
+      console.log("Extracting project features...");
+      const featuresPromise = extractProjectFeatures(
+        projectData.what_it_does_text
+      );
+      const features = await Promise.race([
+        featuresPromise,
+        new Promise((_, reject) =>
+          setTimeout(
+            () => reject(new Error("Features extraction timed out")),
+            10000
+          )
+        ),
+      ]);
+      projectData.features = features;
+    } else {
+      console.log("No project description found, skipping feature extraction");
+      projectData.features = "";
+    }
 
     // Step 3: Generate project tags with timeout
     console.log("Generating project tags...");
     const tagsPromise = generateProjectTags(
       projectData.what_it_does_text,
-      projectData.inspiration_text
+      projectData.inspiration_text,
+      projectData.log_line
     );
     const tags = await Promise.race([
       tagsPromise,

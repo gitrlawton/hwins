@@ -99,8 +99,8 @@ async function scrapeMultipleProjects() {
         });
       });
 
-      // Limit to first 3 projects
-      for (let i = 0; i < Math.min(3, projectData.length); i++) {
+      // Process all projects
+      for (let i = 0; i < projectData.length; i++) {
         try {
           const { url: projectUrl, thumbnailUrl } = projectData[i];
 
