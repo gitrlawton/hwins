@@ -2,11 +2,11 @@
 
 ## Overview
 
-"Hwins" is my submission to the [Brainrot Hackathon](https://brainrot-jia-seed-hackathon.devpost.com/) for the cvrve track.
+Hwins was built for the [Brainrot Hackathon](https://brainrot-jia-seed-hackathon.devpost.com/)'s "most cvrvey website" track.
 
-This project is a winning hackathon project aggregator, showcasing innovative solutions developed during various hackathons. It consists of a web application that allows users to explore, filter, and search through a collection of winning projects, complete with the demo video, awards won, a project feature list, and creator information.
+This project aggregates winning hackathon projects from Devpost. It consists of a web application that allows users to explore, filter, and search through a collection of winning hacks, complete with demo video, awards won, features list, and creator information.
 
-The project is built using React and integrates with Firebase for data storage and retrieval. It also utilizes Puppeteer for web scraping to gather project data from Devpost.
+Hwins is built using React and integrates with Firebase for data storage and retrieval. It also utilizes Puppeteer for web scraping to gather project data from Devpost.
 
 ## Features
 

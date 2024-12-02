@@ -22,9 +22,9 @@ export default function ProjectCard({ project, isExpanded, onToggleExpand }) {
               className="rounded-lg object-cover"
             />
           </div>
-          <div className="flex-grow min-w-0">
+          <div className="flex-grow min-w-0 w-full line-clamp-1">
             <div className="flex items-center space-x-2">
-              <h3 className="font-semibold text-lg leading-tight truncate">
+              <h3 className="font-semibold text-lg leading-tight">
                 {project.project_name}
               </h3>
               <Button
@@ -44,13 +44,15 @@ export default function ProjectCard({ project, isExpanded, onToggleExpand }) {
               {project.log_line}
             </p>
             <div className="flex items-center text-xs text-muted-foreground mt-0.5 gap-4">
-              <div className="flex items-center">
+              {/** min-w-0 sm:min-w-max combination allowed me to have elipsis on mobile and nowhere else*/}
+              <div className="flex items-center min-w-0 sm:min-w-max">
                 <Trophy className="h-3 w-3 mr-1 flex-shrink-0" />
                 <span className="truncate">
                   {project.fields_won.join(", ")}
                 </span>
               </div>
-              <div className="hidden md:flex items-center gap-1 text-gray-500 dark:text-gray-400">
+              {/** Needed to add w-full overflow-hidden here in order to add elipsis to tags */}
+              <div className="hidden md:flex items-center gap-1 text-gray-500 dark:text-gray-400 w-full overflow-hidden">
                 <Tag className="h-3 w-3 flex-shrink-0" />
                 <span className="truncate">
                   {project.tags.map((tag, i) => (

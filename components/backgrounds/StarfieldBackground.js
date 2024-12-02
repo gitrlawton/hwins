@@ -111,39 +111,13 @@ const StarfieldBackground = () => {
     "just a chill bill",
   ];
 
-  // Add a minimum screen size check
-  const isValidScreenSize = () => {
-    return window.innerWidth >= 1024; // Tailwind's 'lg' breakpoint
-  };
-
   useEffect(() => {
-    // Handle screen size changes
-    const checkScreenSize = () => {
-      setIsLargeScreen(isValidScreenSize());
-    };
-
-    // Initial check
-    checkScreenSize();
-
-    // Add event listener for resize
-    window.addEventListener("resize", checkScreenSize);
-
-    // Cleanup
-    return () => {
-      window.removeEventListener("resize", checkScreenSize);
-    };
-  }, []);
-
-  useEffect(() => {
-    // Only run if it's a large screen
-    if (!isLargeScreen) return;
-
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
+    let wordInitTimeout;
 
     // Set canvas size to window size
     const setCanvasSize = () => {
-      if (!isValidScreenSize()) return;
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
     };
@@ -152,7 +126,7 @@ const StarfieldBackground = () => {
     const initStars = () => {
       const stars = [];
       // i is how many stars are created
-      for (let i = 0; i < 1000; i++) {
+      for (let i = 0; i < 400; i++) {
         stars.push({
           x: Math.random() * canvas.width - canvas.width / 2,
           y: Math.random() * canvas.height - canvas.height / 2,
@@ -168,16 +142,8 @@ const StarfieldBackground = () => {
     const handleResize = () => {
       clearTimeout(resizeTimeout);
       resizeTimeout = setTimeout(() => {
-        if (isValidScreenSize()) {
-          setCanvasSize();
-          // Only reinitialize if necessary
-          starsRef.current = []; // Force reinit of stars
-          initStars();
-
-          // Clear existing words and reinit with fewer words
-          wordsRef.current = [];
-          initWords(5); // Fewer words on resize
-        }
+        // Only update canvas dimensions
+        setCanvasSize();
       }, 250); // 250ms debounce
     };
 
@@ -187,7 +153,7 @@ const StarfieldBackground = () => {
       const minDistance = 200; // Minimum distance between words
 
       // i is number of words
-      while (wordObjects.length < 20) {
+      while (wordObjects.length < 6) {
         const newWord = {
           text: words[Math.floor(Math.random() * words.length)],
           x: Math.random() * canvas.width - canvas.width / 2,
@@ -337,8 +303,8 @@ const StarfieldBackground = () => {
     setCanvasSize();
     initStars();
 
-    // Add a 5-second delay before initializing words
-    const wordInitTimeout = setTimeout(() => {
+    // Add a delay before initializing words
+    wordInitTimeout = setTimeout(() => {
       initWords();
     }, 100);
 
@@ -355,15 +321,15 @@ const StarfieldBackground = () => {
       }
       clearTimeout(wordInitTimeout);
     };
-  }, [isLargeScreen]);
+  }, []);
 
-  return isValidScreenSize() ? (
+  return (
     <canvas
       ref={canvasRef}
       className="fixed top-0 left-0 w-full h-full -z-10"
       style={{ background: "rgb(2, 0, 36)" }}
     />
-  ) : null;
+  );
 };
 
 export default StarfieldBackground;
