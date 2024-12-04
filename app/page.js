@@ -111,7 +111,7 @@ export default function ProjectsPage() {
   // Else, show the project cards
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6 dark:text-stone-200">
-      <div className="grid gap-4 md:grid-cols-[1fr_1fr_auto]">
+      <div className="grid gap-4 md:grid-cols-[1fr_1fr_1fr]">
         <div className="space-y-2">
           <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
             Search
@@ -138,7 +138,7 @@ export default function ProjectsPage() {
             </SelectContent>
           </Select>
         </div>
-        <div className="flex items-end space-x-2">
+        <div className="flex items-end space-x-4 w-full justify-between">
           <Button
             variant="ghost"
             className="space-x-2 w-28 border border-neutral-300 dark:hover:bg-stone-700 dark:border-neutral-700"
@@ -147,7 +147,7 @@ export default function ProjectsPage() {
             <span>Filters</span>
             <SlidersHorizontal className="h-4 w-4" />
           </Button>
-          <Button
+          {/* <Button
             variant="ghost"
             size="sm"
             className="h-10 px-3 space-x-1 flex items-center"
@@ -156,11 +156,11 @@ export default function ProjectsPage() {
             <span className="text-sm font-medium mr-1">3255</span>
             <Star className="h-4 w-4 flex-shrink-0" />
             <span className="sr-only">GitHub Stars</span>
-          </Button>
+          </Button> */}
           <Button
             variant="ghost"
             size="sm"
-            className="h-10 w-10 p-0 text-1xl dark:hover:bg-stone-700"
+            className="h-9 w-9 text-1xl"
             onClick={() => {
               setTheme(theme === "light" ? "dark" : "light");
             }}

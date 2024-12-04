@@ -65,7 +65,7 @@ export default function ProjectCard({ project, isExpanded, onToggleExpand }) {
               </div>
             </div>
           </div>
-          <div className="text-sm text-muted-foreground flex-shrink-0">
+          <div className="text-sm hidden md:block text-muted-foreground flex-shrink-0 pr-4">
             {project.project_date}
           </div>
         </div>
@@ -81,7 +81,7 @@ export default function ProjectCard({ project, isExpanded, onToggleExpand }) {
                   allowFullScreen
                 />
               </div>
-              <div className="space-y-2">
+              {/* <div className="space-y-2">
                 <Textarea
                   placeholder="Add a comment..."
                   value={comment}
@@ -104,12 +104,12 @@ export default function ProjectCard({ project, isExpanded, onToggleExpand }) {
                     Comment
                   </Button>
                 </div>
-              </div>
+              </div> */}
             </div>
 
             <div className="relative">
               <div className="space-y-6 pb-8">
-                <div>
+                {/* <div>
                   <div>
                     <h4 className="font-medium mb-2">
                       {project.hackathon_names.length === 1
@@ -120,7 +120,7 @@ export default function ProjectCard({ project, isExpanded, onToggleExpand }) {
                       {project.hackathon_names.join("\n")}
                     </p>
                   </div>
-                </div>
+                </div> */}
 
                 <div>
                   <h4 className="font-medium mb-2">Features</h4>
@@ -131,7 +131,9 @@ export default function ProjectCard({ project, isExpanded, onToggleExpand }) {
                   ) : (
                     <ul className="text-sm text-muted-foreground space-y-1">
                       {project.features.map((feature) => (
-                        <li key={feature}>• {feature}</li>
+                        <li key={feature}>
+                          • {feature.charAt(0).toUpperCase() + feature.slice(1)}
+                        </li>
                       ))}
                     </ul>
                   )}
