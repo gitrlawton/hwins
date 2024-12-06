@@ -160,7 +160,7 @@ export default function ProjectsPage() {
           <Button
             variant="ghost"
             size="sm"
-            className="h-9 w-9 text-1xl"
+            className="h-9 w-9 text-1xl rounded-full"
             onClick={() => {
               setTheme(theme === "light" ? "dark" : "light");
             }}

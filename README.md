@@ -2,9 +2,9 @@
 
 ## Overview
 
-Hwins was built for the [Brainrot Hackathon](https://brainrot-jia-seed-hackathon.devpost.com/)'s "most cvrvey website" track.
+Hwins was developed for the [Brainrot Hackathon](https://brainrot-jia-seed-hackathon.devpost.com/)'s "most cvrvey website" track.
 
-This project aggregates winning hackathon projects from Devpost. It consists of a web application that allows users to explore, filter, and search through a collection of winning hacks, complete with demo video, awards won, features list, and creator information.
+This project aggregates winning hackathon projects from Devpost. It consists of a web application that allows users to explore, filter, and search through a collection of winning hacks——complete with demo video, awards won, features list, and creator information.
 
 Hwins is built using React and integrates with Firebase for data storage and retrieval. It also utilizes Puppeteer for web scraping to gather project data from Devpost.
 
