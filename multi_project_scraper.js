@@ -35,7 +35,7 @@ async function scrapeMultipleProjects() {
 
       // Navigate to the search results page
       await page.goto(
-        "https://devpost.com/software/search?page=2&query=is%3Awinner+has%3Avideo",
+        "https://devpost.com/software/search?query=is%3Awinner+has%3Avideo",
         {
           waitUntil: "networkidle2",
           timeout: 60000,

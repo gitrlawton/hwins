@@ -1,5 +1,6 @@
 import localFont from "next/font/local";
 import "./globals.css";
+import { Analytics } from "@vercel/analytics/react";
 import { ThemeProvider } from "next-themes";
 import ThemeWrapper from "@/components/custom/ThemeWrapper";
 
@@ -34,6 +35,7 @@ export default function RootLayout({ children }) {
         >
           <ThemeWrapper>{children}</ThemeWrapper>
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   );
