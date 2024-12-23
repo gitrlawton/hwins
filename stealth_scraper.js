@@ -4,6 +4,7 @@ import stealthPlugin from "puppeteer-extra-plugin-stealth";
 import OpenAI from "openai";
 import dotenv from "dotenv";
 import { writeProjectToFirestore } from "./firebase.js";
+import { predefinedTags } from "./lib/predefinedTags.js";
 
 // Add stealth plugin
 puppeteerExtra.use(stealthPlugin());
@@ -98,40 +99,18 @@ async function extractProjectFeatures(whatItDoesText, inspirationText = null) {
 }
 
 async function generateProjectTags(whatItDoesText, inspirationText, logLine) {
-  const predefinedTags = [
-    "Social Good",
-    "Machine Learning/AI",
-    "Education",
-    "Low Code/No Code",
-    "Web",
-    "Blockchain",
-    "Productivity",
-    "Gaming",
-    "Fintech",
-    "Mobile",
-    "Health",
-    "AR/VR",
-    "IoT",
-    "DevOps",
-    "Cybersecurity",
-    "Lifehacks",
-    "E-commerce/Retail",
-    "Language/Translation",
-    "Music/Art",
-    "COVID-19",
-    "Robotics",
-    "Quantum",
-    "Sustainability",
-    "Sports/Fitness",
-    "Agriculture",
-    "Accessibility",
-    "Data Visualization",
-    "Space",
-    "Supply Chain/Logistics",
-  ];
+  if (
+    (inspirationText ? inspirationText.length : 0) +
+      (whatItDoesText ? whatItDoesText.length : 0) +
+      (logLine ? logLine.length : 0) <
+    50
+  ) {
+    return [];
+  }
 
   const prompt = `Analyze the following project description and inspiration text.  Based on this information, determine the 
-  most appropriate tags and list them as a comma-separated list. Example: ["Machine Learning/AI", "Education", "Web"]:
+  most appropriate available tags and list them as a comma-separated list. Example: ["Machine Learning/AI", "Education", "Web"].  
+  If none are applicable, leave the list blank:
 
   Project Description: ${whatItDoesText}
 
@@ -176,7 +155,8 @@ async function generateProjectTags(whatItDoesText, inspirationText, logLine) {
               tag !== "Here are the most appropriate tags for the project"
           ) // Remove empty tags and unwanted text
       : [];
-    return extractedTags;
+
+    return extractedTags.filter((tag) => predefinedTags.includes(tag));
   } catch (error) {
     console.error("Error generating project tags:", error);
     return [];
@@ -229,9 +209,12 @@ async function scrapeProject(url) {
         "";
 
       // Project Date
-      const timeElement = document.querySelector("time.timeago");
-      const fullDateString = timeElement
-        ? timeElement.getAttribute("title")
+      const timeElements = document.querySelectorAll("time.timeago");
+      const projectDateElement = Array.from(timeElements).find((timeEl) =>
+        timeEl.closest("p")?.textContent.includes("started this project")
+      );
+      const fullDateString = projectDateElement
+        ? projectDateElement.getAttribute("title")
         : null;
       const projectDate = fullDateString
         ? fullDateString.split(" ").slice(0, 3).join(" ") // Takes "Nov 25, 2024" part
@@ -480,14 +463,20 @@ async function scrapeAndWriteSingleProject(pageUrl, thumbnailUrl) {
 
 // Test function to scrape a single project
 async function testScrapeAndWriteSingleProject() {
-  const testUrl = "https://devpost.com/software/memory-lanes";
+  const testUrl = "https://devpost.com/software/bunny-up";
+  const testThumbnailUrl =
+    "https://d112y698adiu2z.cloudfront.net/photos/production/software_thumbnail_photos/003/164/738/datas/medium.png";
 
   console.log("Starting test for scrapeAndWriteSingleProject...");
   console.log(`Test URL: ${testUrl}`);
+  console.log(`Test Thumbnail URL: ${testThumbnailUrl}`);
 
   try {
     console.log("Calling scrapeAndWriteSingleProject...");
-    const projectData = await scrapeAndWriteSingleProject(testUrl);
+    const projectData = await scrapeAndWriteSingleProject(
+      testUrl,
+      testThumbnailUrl
+    );
 
     console.log("Project Data Scraping Test Results:");
     console.log("Project Name:", projectData.project_name);
@@ -508,17 +497,27 @@ async function testScrapeAndWriteSingleProject() {
   }
 }
 
-// Only run test if this script is being run directly
-if (import.meta.url === `file://${process.argv[1]}`) {
-  testScrapeAndWriteSingleProject()
-    .then(() => {
-      console.log("Test completed successfully");
-      process.exit(0);
-    })
-    .catch((error) => {
-      console.error("Test failed:", error);
-      process.exit(1);
-    });
-}
+// // Only run test if this script is being run directly
+// if (import.meta.url === `file://${process.argv[1]}`) {
+//   testScrapeAndWriteSingleProject()
+//     .then(() => {
+//       console.log("Test completed successfully");
+//       process.exit(0);
+//     })
+//     .catch((error) => {
+//       console.error("Test failed:", error);
+//       process.exit(1);
+//     });
+// }
+
+// testScrapeAndWriteSingleProject()
+//   .then(() => {
+//     console.log("Test completed successfully");
+//     process.exit(0);
+//   })
+//   .catch((error) => {
+//     console.error("Test failed:", error);
+//     process.exit(1);
+//   });
 
 export { scrapeAndWriteSingleProject, testScrapeAndWriteSingleProject };

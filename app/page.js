@@ -36,7 +36,7 @@ export default function ProjectsPage() {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const projectsCollection = collection(db, "devpost_projects");
+        const projectsCollection = collection(db, "brainrot_winners");
         const projectSnapshot = await getDocs(projectsCollection);
         const projectList = projectSnapshot.docs.map((doc) => ({
           id: doc.id,

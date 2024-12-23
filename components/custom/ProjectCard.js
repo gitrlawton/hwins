@@ -45,24 +45,26 @@ export default function ProjectCard({ project, isExpanded, onToggleExpand }) {
             </p>
             <div className="flex items-center text-xs text-muted-foreground mt-0.5 gap-4">
               {/** min-w-0 sm:min-w-max combination allowed me to have elipsis on mobile and nowhere else*/}
-              <div className="flex items-center min-w-0 sm:min-w-max">
+              <div className="flex items-center min-w-0 flex-shrink">
                 <Trophy className="h-3 w-3 mr-1 flex-shrink-0" />
                 <span className="truncate">
                   {project.fields_won.join(", ")}
                 </span>
               </div>
               {/** Needed to add w-full overflow-hidden here in order to add elipsis to tags */}
-              <div className="hidden md:flex items-center gap-1 text-gray-500 dark:text-gray-400 w-full overflow-hidden">
-                <Tag className="h-3 w-3 flex-shrink-0" />
-                <span className="truncate">
-                  {project.tags.map((tag, i) => (
-                    <span key={tag}>
-                      {tag}
-                      {i < project.tags.length - 1 && " • "}
-                    </span>
-                  ))}
-                </span>
-              </div>
+              {project.tags.length > 0 && (
+                <div className="hidden lg:flex items-center gap-1 text-gray-500 dark:text-gray-400 min-w-0 flex-shrink">
+                  <Tag className="h-3 w-3 flex-shrink-0" />
+                  <span className="truncate">
+                    {project.tags.map((tag, i) => (
+                      <span key={tag}>
+                        {tag}
+                        {i < project.tags.length - 1 && " • "}
+                      </span>
+                    ))}
+                  </span>
+                </div>
+              )}
             </div>
           </div>
           <div className="text-sm hidden md:block text-muted-foreground flex-shrink-0 pr-4">

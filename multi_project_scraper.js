@@ -35,7 +35,7 @@ async function scrapeMultipleProjects() {
 
       // Navigate to the search results page
       await page.goto(
-        "https://devpost.com/software/search?query=is%3Awinner+has%3Avideo",
+        "https://brainrot-jia-seed-hackathon.devpost.com/project-gallery?page=7",
         {
           waitUntil: "networkidle2",
           timeout: 60000,
@@ -103,6 +103,14 @@ async function scrapeMultipleProjects() {
       for (let i = 0; i < projectData.length; i++) {
         try {
           const { url: projectUrl, thumbnailUrl } = projectData[i];
+
+          // Add a 10-second delay after every 5th iteration
+          if (i % 5 === 0 && i > 0) {
+            console.log(
+              `Pausing for 10 seconds before beginning project ${i + 1}...`
+            );
+            await new Promise((resolve) => setTimeout(resolve, 10000));
+          }
 
           // Log the project URL and thumbnail
           console.log(`=== Scraping Project ${i + 1} ===`);

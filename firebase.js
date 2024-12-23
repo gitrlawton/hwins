@@ -66,7 +66,7 @@ export async function writeProjectToFirestore(projectData) {
 
     // Use sanitized post_url as the document ID to avoid duplicates
     const docRef = await setDoc(
-      doc(db, "devpost_projects", sanitizedUrl),
+      doc(db, "brainrot_winners", sanitizedUrl),
       projectWithTimestamp
     );
 
