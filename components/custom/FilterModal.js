@@ -11,6 +11,7 @@ import {
 
 const CATEGORIES = [
   "Accessibility",
+  "Agriculture",
   "AR/VR",
   "Blockchain",
   "Cybersecurity",
@@ -22,6 +23,7 @@ const CATEGORIES = [
   "Gaming",
   "Health",
   "IoT",
+  "Jobs/Career",
   "Language/Translation",
   "Lifehacks",
   "Low Code/No Code",
