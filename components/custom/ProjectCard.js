@@ -4,7 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Textarea } from "@/components/ui/textarea";
 import { Heart, ChevronDown, ChevronUp, Trophy, Tag } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 export default function ProjectCard({ project, isExpanded, onToggleExpand }) {
   const [isLiked, setIsLiked] = useState(false);
@@ -40,20 +40,30 @@ export default function ProjectCard({ project, isExpanded, onToggleExpand }) {
                 )}
               </Button>
             </div>
-            <p className="text-sm text-muted-foreground leading-snug line-clamp-1 mt-0.5 max-w-[875px]">
+            <p className="text-sm text-muted-foreground leading-snug line-clamp-1 mt-0.5 md:max-w-[450px] lg:max-w-[690px] xl:max-w-[940px] 2xl:max-w-[1200px]">
               {project.log_line}
             </p>
-            <div className="flex items-center text-xs text-muted-foreground mt-0.5 gap-4">
-              {/** min-w-0 sm:min-w-max combination allowed me to have elipsis on mobile and nowhere else*/}
-              <div className="flex items-center min-w-0 flex-shrink">
-                <Trophy className="h-3 w-3 mr-1 flex-shrink-0" />
+            <div className="flex items-center text-xs text-muted-foreground mt-0.5 gap-4 md:max-w-[450px] lg:max-w-[690px] xl:max-w-[940px] 2xl:max-w-[1200px]">
+              {/**
+               * Removed min-w-0 from the trophies div to ensure it doesn't give up any space prematurely.
+               * flex-shrink-0 to ensure the trophies div never shrinks when there’s contention for space.
+               * max-w-full to allow it to utilize all available space up to its parent’s width.
+               */}
+              <div className="flex items-center flex-shrink-0 max-w-full">
+                {/* <Trophy className="h-3 w-3 mr-1 flex-shrink-0" /> */}
+                {/**
+                 * The truncate class is responsible for ensuring that the text within the <span> is truncated with an ellipsis
+                 */}
                 <span className="truncate">
-                  {project.fields_won.join(", ")}
+                  {project.fields_won.map((field) => `🏆 ${field}`).join(" ")}
                 </span>
               </div>
-              {/** Needed to add w-full overflow-hidden here in order to add elipsis to tags */}
+              {/**
+               * min-w-0 to allow truncation of the tags.
+               * flex-shrink to ensure the tags give up space when needed.
+               */}
               {project.tags.length > 0 && (
-                <div className="hidden lg:flex items-center gap-1 text-gray-500 dark:text-gray-400 min-w-0 flex-shrink">
+                <div className="hidden lg:flex items-center gap-1 text-gray-500 dark:text-gray-400 min-w-0 flex-shrink truncate">
                   <Tag className="h-3 w-3 flex-shrink-0" />
                   <span className="truncate">
                     {project.tags.map((tag, i) => (

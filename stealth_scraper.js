@@ -30,13 +30,16 @@ async function extractProjectFeatures(whatItDoesText, inspirationText = null) {
 
   Extracted Features:  ["Story-based exploration of real-life experiences through interactive map", "QR code-triggered audio stories with subtitles", "In-person meetup requests with volunteer-organized connections"]
 
+  Important: If a project only does one distinct thing, then it should only have one feature.  If a project does two distinct 
+  things, then it should have two features, and so on. 
+
   Now, extract features for this project:
 
   ${whatItDoesText}
   ${useInspirationText ? `\nAdditional Context:\n${inspirationText}` : ""}
 
   Guidelines:
-  - Extract 3-5 concise, distinct features
+  - Extract 1-4 concise, distinct features
   - Focus on unique and innovative aspects
   - Use clear, brief language
   - Each feature MUST be wrapped in double quotes and separated by commas
@@ -463,9 +466,9 @@ async function scrapeAndWriteSingleProject(pageUrl, thumbnailUrl) {
 
 // Test function to scrape a single project
 async function testScrapeAndWriteSingleProject() {
-  const testUrl = "https://devpost.com/software/bunny-up";
+  const testUrl = "https://devpost.com/software/linkedin-translator";
   const testThumbnailUrl =
-    "https://d112y698adiu2z.cloudfront.net/photos/production/software_thumbnail_photos/003/164/738/datas/medium.png";
+    "https://d112y698adiu2z.cloudfront.net/photos/production/software_photos/003/162/062/datas/medium.jpeg";
 
   console.log("Starting test for scrapeAndWriteSingleProject...");
   console.log(`Test URL: ${testUrl}`);
@@ -510,14 +513,14 @@ async function testScrapeAndWriteSingleProject() {
 //     });
 // }
 
-// testScrapeAndWriteSingleProject()
-//   .then(() => {
-//     console.log("Test completed successfully");
-//     process.exit(0);
-//   })
-//   .catch((error) => {
-//     console.error("Test failed:", error);
-//     process.exit(1);
-//   });
+testScrapeAndWriteSingleProject()
+  .then(() => {
+    console.log("Test completed successfully");
+    process.exit(0);
+  })
+  .catch((error) => {
+    console.error("Test failed:", error);
+    process.exit(1);
+  });
 
 export { scrapeAndWriteSingleProject, testScrapeAndWriteSingleProject };
