@@ -34,6 +34,11 @@ export default function ProjectsPage() {
     setMounted(true);
   }, []);
 
+  // Hook to reset expanded project when search term changes
+  useEffect(() => {
+    setExpandedProjectId(null);
+  }, [searchTerm]);
+
   useEffect(() => {
     const fetchProjects = async () => {
       try {
@@ -198,7 +203,11 @@ export default function ProjectsPage() {
             }}
           >
             {mounted &&
-              (theme === "light" ? "🤪" : <Sun className="h-4 w-4" />)}
+              (theme === "light" ? (
+                <Moon className="h-4 w-4" />
+              ) : (
+                <Sun className="h-4 w-4" />
+              ))}
             <span className="sr-only">Toggle theme</span>
           </Button>
         </div>
@@ -228,7 +237,10 @@ export default function ProjectsPage() {
       <FilterModal
         isOpen={isFilterModalOpen}
         onClose={() => setIsFilterModalOpen(false)}
-        onApplyFilters={setActiveFilters}
+        onApplyFilters={(filters) => {
+          setActiveFilters(filters);
+          setExpandedProjectId(null);
+        }}
         initialFilters={activeFilters}
       />
     </div>
