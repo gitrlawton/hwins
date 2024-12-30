@@ -19,6 +19,7 @@ import { FilterModal } from "@/components/custom/FilterModal";
 
 export default function ProjectsPage() {
   const [searchTerm, setSearchTerm] = useState("");
+  const [searchInput, setSearchInput] = useState("");
   const [projects, setProjects] = useState([]);
   const [sortBy, setSortBy] = useState("default");
   const [expandedProjectId, setExpandedProjectId] = useState(null);
@@ -56,7 +57,28 @@ export default function ProjectsPage() {
   }, []);
 
   const filteredProjects = [...projects]
-    // First, filter by selected categories
+    // First, filter by search term
+    .filter((project) => {
+      if (!searchTerm) return true; // Show all if no search term
+      const searchTerms = searchTerm.toLowerCase().split(/\s+/);
+
+      // Check if ALL search terms are found across ANY field
+      return searchTerms.every(
+        (term) =>
+          (project.features &&
+            project.features.some((feature) =>
+              feature.toLowerCase().includes(term)
+            )) ||
+          (project.inspiration_text &&
+            project.inspiration_text.toLowerCase().includes(term)) ||
+          (project.log_line && project.log_line.toLowerCase().includes(term)) ||
+          (project.what_it_does_text &&
+            project.what_it_does_text.toLowerCase().includes(term)) ||
+          (project.project_name &&
+            project.project_name.toLowerCase().includes(term))
+      );
+    })
+    // Then, filter by selected categories
     .filter((project) => {
       if (activeFilters.length === 0) return true; // Show all if no filters
       return activeFilters.every((filter) => project.tags.includes(filter));
@@ -108,7 +130,7 @@ export default function ProjectsPage() {
     );
   }
 
-  // Else, show the project cards
+  // Else, show the list of projects
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6 dark:text-stone-200">
       <div className="grid gap-4 md:grid-cols-[1fr_1fr_1fr]">
@@ -117,11 +139,21 @@ export default function ProjectsPage() {
             Search
           </label>
           <Input
-            placeholder="Search by keyword"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full bg-muted"
-            disabled
+            placeholder="Search by keyword (clear to reset)"
+            value={searchInput}
+            onChange={(e) => {
+              const inputValue = e.target.value;
+              setSearchInput(inputValue);
+              if (inputValue === "") {
+                setSearchTerm("");
+              }
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                setSearchTerm(searchInput);
+              }
+            }}
+            className="w-full bg-neutral-100 dark:bg-neutral-900"
           />
         </div>
         <div className="space-y-2">
@@ -129,10 +161,10 @@ export default function ProjectsPage() {
             Sort by
           </label>
           <Select value={sortBy} onValueChange={setSortBy}>
-            <SelectTrigger>
+            <SelectTrigger className="w-full bg-neutral-100 dark:bg-neutral-900">
               <SelectValue placeholder="Sort by" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="w-full bg-neutral-200 dark:bg-neutral-900">
               <SelectItem value="default">Alphabetical (Default)</SelectItem>
               <SelectItem value="recent">Most Recent</SelectItem>
             </SelectContent>
@@ -141,7 +173,7 @@ export default function ProjectsPage() {
         <div className="flex items-end space-x-4 w-full justify-between">
           <Button
             variant="ghost"
-            className="space-x-2 w-28 border border-neutral-300 dark:hover:bg-stone-700 dark:border-neutral-700"
+            className="space-x-2 w-28 border bg-neutral-100 dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700"
             onClick={() => setIsFilterModalOpen(true)}
           >
             <span>Filters</span>
@@ -172,6 +204,12 @@ export default function ProjectsPage() {
         </div>
       </div>
 
+      <div className="flex items-center justify-between mb-4">
+        <span className="text-sm font-medium text-muted-foreground">
+          {filteredProjects.length} result
+          {filteredProjects.length !== 1 ? "s" : ""}
+        </span>
+      </div>
       <div className="space-y-4">
         {filteredProjects.map((project) => (
           <ProjectCard
