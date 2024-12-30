@@ -172,7 +172,7 @@ export default function ProjectCard({ project, isExpanded, onToggleExpand }) {
                         target="_blank"
                         rel="noopener noreferrer"
                       >
-                        <Avatar className="ring-1 ring-gray-300">
+                        <Avatar className="ring-1 ring-gray-300 dark:ring-gray-700">
                           <AvatarImage
                             src={creator.profile_picture}
                             alt={creator.name}

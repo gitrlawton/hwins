@@ -153,7 +153,7 @@ export default function ProjectsPage() {
                 setSearchTerm(searchInput);
               }
             }}
-            className="w-full bg-neutral-100 dark:bg-neutral-900"
+            className="w-full bg-neutral-100 dark:bg-neutral-900 "
           />
         </div>
         <div className="space-y-2">
@@ -164,7 +164,7 @@ export default function ProjectsPage() {
             <SelectTrigger className="w-full bg-neutral-100 dark:bg-neutral-900">
               <SelectValue placeholder="Sort by" />
             </SelectTrigger>
-            <SelectContent className="w-full bg-neutral-200 dark:bg-neutral-900">
+            <SelectContent className="w-full bg-neutral-100 dark:bg-neutral-900">
               <SelectItem value="default">Alphabetical (Default)</SelectItem>
               <SelectItem value="recent">Most Recent</SelectItem>
             </SelectContent>
@@ -173,7 +173,7 @@ export default function ProjectsPage() {
         <div className="flex items-end space-x-4 w-full justify-between">
           <Button
             variant="ghost"
-            className="space-x-2 w-28 border bg-neutral-100 dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700"
+            className="space-x-2 w-28 border bg-neutral-100 dark:hover:text-stone-200 dark:hover:bg-neutral-900 dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 "
             onClick={() => setIsFilterModalOpen(true)}
           >
             <span>Filters</span>
