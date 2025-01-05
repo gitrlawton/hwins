@@ -144,7 +144,7 @@ export default function ProjectsPage() {
             Search
           </label>
           <Input
-            placeholder="Search by keyword (clear to reset)"
+            placeholder="Enter keywords to search (clear to reset)"
             value={searchInput}
             onChange={(e) => {
               const inputValue = e.target.value;

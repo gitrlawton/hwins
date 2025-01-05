@@ -65,6 +65,10 @@ export function FilterModal({
     );
   };
 
+  const handleClearAll = () => {
+    setSelectedFilters([]);
+  };
+
   const handleApply = () => {
     onApplyFilters(selectedFilters);
     onClose();
@@ -93,12 +97,20 @@ export function FilterModal({
             </div>
           ))}
         </div>
-        <DialogFooter>
+        <DialogFooter className="flex space-x-2">
           <Button
-            onClick={handleApply}
-            className="dark:text-stone-300 dark:hover:bg-stone-700 dark:bg-stone-800"
+            variant="secondary"
+            onClick={handleClearAll}
+            className="bg-stone-200 hover:bg-stone-300 dark:text-stone-300 dark:hover:bg-stone-700 dark:bg-stone-800"
           >
-            Apply Filters
+            Clear All
+          </Button>
+          <Button
+            variant="secondary"
+            onClick={handleApply}
+            className="bg-stone-200 hover:bg-stone-300 dark:text-stone-300 dark:hover:bg-stone-700 dark:bg-stone-800"
+          >
+            Apply
           </Button>
         </DialogFooter>
       </DialogContent>
