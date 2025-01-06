@@ -138,13 +138,13 @@ export default function ProjectsPage() {
   // Else, show the list of projects
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6 dark:text-stone-200">
-      <div className="grid gap-4 md:grid-cols-[1fr_1fr_1fr]">
+      <div className="grid gap-4 md:grid-cols-[90fr_90fr_90fr_1fr_1fr]">
         <div className="space-y-2">
           <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
             Search
           </label>
           <Input
-            placeholder="Enter keywords to search (clear to reset)"
+            placeholder="Enter to search (clear to reset)"
             value={searchInput}
             onChange={(e) => {
               const inputValue = e.target.value;
@@ -163,7 +163,7 @@ export default function ProjectsPage() {
         </div>
         <div className="space-y-2">
           <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-            Sort by
+            Order by
           </label>
           <Select value={sortBy} onValueChange={setSortBy}>
             <SelectTrigger className="w-full bg-neutral-100 dark:bg-neutral-900">
@@ -175,7 +175,22 @@ export default function ProjectsPage() {
             </SelectContent>
           </Select>
         </div>
-        <div className="flex items-end space-x-4 w-full justify-between">
+        <div className="space-y-2">
+          <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+            Hackathon
+          </label>
+          <Select value="Brainrot Hackathon">
+            <SelectTrigger className="w-full bg-neutral-100 dark:bg-neutral-900">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent className="w-full bg-neutral-100 dark:bg-neutral-900">
+              <SelectItem value="Brainrot Hackathon">
+                Brainrot Hackathon
+              </SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="flex items-end space-x-4 w-full">
           <Button
             variant="ghost"
             className="space-x-2 w-28 border bg-neutral-100 dark:hover:text-stone-200 dark:hover:bg-neutral-900 dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 "
