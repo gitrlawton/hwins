@@ -16,6 +16,7 @@ import { SlidersHorizontal, Star, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import ProjectCard from "@/components/custom/ProjectCard";
 import { FilterModal } from "@/components/custom/FilterModal";
+import Header from "@/components/custom/Header";
 
 export default function ProjectsPage() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -137,69 +138,71 @@ export default function ProjectsPage() {
 
   // Else, show the list of projects
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6 dark:text-stone-200">
-      <div className="grid gap-4 md:grid-cols-[90fr_90fr_90fr_1fr_1fr]">
-        <div className="space-y-2">
-          <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-            Search
-          </label>
-          <Input
-            placeholder="Enter to search (clear to reset)"
-            value={searchInput}
-            onChange={(e) => {
-              const inputValue = e.target.value;
-              setSearchInput(inputValue);
-              if (inputValue === "") {
-                setSearchTerm("");
-              }
-            }}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                setSearchTerm(searchInput);
-              }
-            }}
-            className="w-full bg-neutral-100 dark:bg-neutral-900 "
-          />
-        </div>
-        <div className="space-y-2">
-          <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-            Order by
-          </label>
-          <Select value={sortBy} onValueChange={setSortBy}>
-            <SelectTrigger className="w-full bg-neutral-100 dark:bg-neutral-900">
-              <SelectValue placeholder="Sort by" />
-            </SelectTrigger>
-            <SelectContent className="w-full bg-neutral-100 dark:bg-neutral-900">
-              <SelectItem value="default">Alphabetical (Default)</SelectItem>
-              <SelectItem value="recent">Most Recent</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-        <div className="space-y-2">
-          <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-            Hackathon
-          </label>
-          <Select value="Brainrot Hackathon">
-            <SelectTrigger className="w-full bg-neutral-100 dark:bg-neutral-900">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent className="w-full bg-neutral-100 dark:bg-neutral-900">
-              <SelectItem value="Brainrot Hackathon">
-                Brainrot Hackathon
-              </SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-        <div className="flex items-end space-x-4 w-full">
-          <Button
-            variant="ghost"
-            className="space-x-2 w-28 border bg-neutral-100 dark:hover:text-stone-200 dark:hover:bg-neutral-900 dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 "
-            onClick={() => setIsFilterModalOpen(true)}
-          >
-            <span>Filters</span>
-            <SlidersHorizontal className="h-4 w-4" />
-          </Button>
-          {/* <Button
+    <>
+      <Header />
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6 dark:text-stone-200">
+        <div className="grid gap-4 md:grid-cols-[90fr_90fr_90fr_1fr]">
+          <div className="space-y-2">
+            <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+              Search
+            </label>
+            <Input
+              placeholder="Enter to search (clear to reset)"
+              value={searchInput}
+              onChange={(e) => {
+                const inputValue = e.target.value;
+                setSearchInput(inputValue);
+                if (inputValue === "") {
+                  setSearchTerm("");
+                }
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  setSearchTerm(searchInput);
+                }
+              }}
+              className="w-full bg-neutral-100 dark:bg-neutral-900 "
+            />
+          </div>
+          <div className="space-y-2">
+            <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+              Order by
+            </label>
+            <Select value={sortBy} onValueChange={setSortBy}>
+              <SelectTrigger className="w-full bg-neutral-100 dark:bg-neutral-900">
+                <SelectValue placeholder="Sort by" />
+              </SelectTrigger>
+              <SelectContent className="w-full bg-neutral-100 dark:bg-neutral-900">
+                <SelectItem value="default">Alphabetical (Default)</SelectItem>
+                <SelectItem value="recent">Most Recent</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-2">
+            <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+              Hackathon
+            </label>
+            <Select value="Brainrot Hackathon">
+              <SelectTrigger className="w-full bg-neutral-100 dark:bg-neutral-900">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent className="w-full bg-neutral-100 dark:bg-neutral-900">
+                <SelectItem value="Brainrot Hackathon">
+                  Brainrot Hackathon
+                </SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="flex items-end space-x-4 w-full">
+            <Button
+              variant="ghost"
+              className="space-x-2 w-28 border bg-neutral-100 dark:hover:text-stone-200 dark:hover:bg-neutral-900 dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 "
+              onClick={() => setIsFilterModalOpen(true)}
+            >
+              <span>Filters</span>
+              <SlidersHorizontal className="h-4 w-4" />
+            </Button>
+            {/* <Button
             variant="ghost"
             size="sm"
             className="h-10 px-3 space-x-1 flex items-center"
@@ -209,55 +212,56 @@ export default function ProjectsPage() {
             <Star className="h-4 w-4 flex-shrink-0" />
             <span className="sr-only">GitHub Stars</span>
           </Button> */}
-          <Button
-            variant="ghost"
-            size="sm"
-            className="h-9 w-9 text-1xl rounded-full"
-            onClick={() => {
-              setTheme(theme === "light" ? "dark" : "light");
-            }}
-          >
-            {mounted &&
-              (theme === "light" ? (
-                <Moon className="h-4 w-4" />
-              ) : (
-                <Sun className="h-4 w-4" />
-              ))}
-            <span className="sr-only">Toggle theme</span>
-          </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-9 w-9 text-1xl rounded-full"
+              onClick={() => {
+                setTheme(theme === "light" ? "dark" : "light");
+              }}
+            >
+              {mounted &&
+                (theme === "light" ? (
+                  <Moon className="h-4 w-4" />
+                ) : (
+                  <Sun className="h-4 w-4" />
+                ))}
+              <span className="sr-only">Toggle theme</span>
+            </Button>
+          </div>
         </div>
-      </div>
 
-      <div className="flex items-center justify-between mb-4">
-        <span className="text-sm font-medium text-muted-foreground">
-          {filteredProjects.length} result
-          {filteredProjects.length !== 1 ? "s" : ""}
-        </span>
-      </div>
-      <div className="space-y-4">
-        {filteredProjects.map((project) => (
-          <ProjectCard
-            key={project.id}
-            project={project}
-            isExpanded={expandedProjectId === project.id}
-            onToggleExpand={() =>
-              setExpandedProjectId(
-                expandedProjectId === project.id ? null : project.id
-              )
-            }
-          />
-        ))}
-      </div>
+        <div className="flex items-center justify-between mb-4">
+          <span className="text-sm font-medium text-muted-foreground">
+            {filteredProjects.length} result
+            {filteredProjects.length !== 1 ? "s" : ""}
+          </span>
+        </div>
+        <div className="space-y-4">
+          {filteredProjects.map((project) => (
+            <ProjectCard
+              key={project.id}
+              project={project}
+              isExpanded={expandedProjectId === project.id}
+              onToggleExpand={() =>
+                setExpandedProjectId(
+                  expandedProjectId === project.id ? null : project.id
+                )
+              }
+            />
+          ))}
+        </div>
 
-      <FilterModal
-        isOpen={isFilterModalOpen}
-        onClose={() => setIsFilterModalOpen(false)}
-        onApplyFilters={(filters) => {
-          setActiveFilters(filters);
-          setExpandedProjectId(null);
-        }}
-        initialFilters={activeFilters}
-      />
-    </div>
+        <FilterModal
+          isOpen={isFilterModalOpen}
+          onClose={() => setIsFilterModalOpen(false)}
+          onApplyFilters={(filters) => {
+            setActiveFilters(filters);
+            setExpandedProjectId(null);
+          }}
+          initialFilters={activeFilters}
+        />
+      </div>
+    </>
   );
 }
