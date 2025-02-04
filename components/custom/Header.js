@@ -22,11 +22,11 @@ export default function Header() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           <div className="flex flex-col">
-            <div className="flex items-center dark:text-stone-200">
+            <div className="flex items-center dark:text-stone-200 space-x-1">
               <span className="text-3xl font-semibold tracking-wider">
                 HWINS
               </span>
-              <Trophy className="h-6 w-6 ml-2 text-foreground" />
+              <span className="text-2xl">🏆</span>
             </div>
             <span className="text-sm text-muted-foreground italic">
               winning hackathon projects

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { db, collection, getDocs } from "../firebase";
 import SAMPLE_PROJECTS from "../mock-project-data.json";
 import { Input } from "@/components/ui/input";
@@ -28,6 +28,11 @@ export default function ProjectsPage() {
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [mounted, setMounted] = useState(false);
+  const [displayedProjects, setDisplayedProjects] = useState([]);
+  const [pageSize, setPageSize] = useState(20);
+  const [hasMore, setHasMore] = useState(true);
+  const observerRef = useRef();
+  const initialRenderRef = useRef(true);
   const { theme, setTheme } = useTheme();
 
   // To handle hydration error on load.
@@ -103,6 +108,50 @@ export default function ProjectsPage() {
       }
       return a.project_name.localeCompare(b.project_name);
     });
+
+  // Function to load more projects as user scrolls
+  const loadMoreProjects = useCallback(() => {
+    const nextPageSize = pageSize + 10;
+    const nextProjects = filteredProjects.slice(0, nextPageSize);
+    setDisplayedProjects(nextProjects);
+    setPageSize(nextPageSize);
+    setHasMore(nextPageSize < filteredProjects.length);
+  }, [filteredProjects, pageSize]);
+
+  // Function to observe the last project element that was rendered
+  const lastProjectElementRef = useCallback(
+    (node) => {
+      if (isLoading) return;
+      if (observerRef.current) observerRef.current.disconnect();
+      observerRef.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          loadMoreProjects();
+        }
+      });
+      if (node) observerRef.current.observe(node);
+    },
+    [isLoading, hasMore, loadMoreProjects]
+  );
+
+  // useEffect to reset pagination when filters change
+  useEffect(() => {
+    // Reset page size and displayed projects when filters change
+    setPageSize(20);
+    const initialProjects = filteredProjects.slice(0, 20);
+    setDisplayedProjects(initialProjects);
+    setHasMore(filteredProjects.length > 20);
+  }, [activeFilters, searchTerm, sortBy]); // Add any other filter-related dependencies
+
+  // Use useEffect to manage initial project display
+  useEffect(() => {
+    if (initialRenderRef.current && !isLoading) {
+      const initialProjects = filteredProjects.slice(0, 20);
+      setDisplayedProjects(initialProjects);
+      setPageSize(20);
+      setHasMore(filteredProjects.length > 20);
+      initialRenderRef.current = false;
+    }
+  }, [filteredProjects, isLoading]);
 
   // If loading, show a loading state
   if (isLoading) {
@@ -238,19 +287,31 @@ export default function ProjectsPage() {
           </span>
         </div>
         <div className="space-y-4">
-          {filteredProjects.map((project) => (
-            <ProjectCard
+          {displayedProjects.map((project, index) => (
+            <div
               key={project.id}
-              project={project}
-              isExpanded={expandedProjectId === project.id}
-              onToggleExpand={() =>
-                setExpandedProjectId(
-                  expandedProjectId === project.id ? null : project.id
-                )
+              ref={
+                index === displayedProjects.length - 1
+                  ? lastProjectElementRef
+                  : null
               }
-            />
+            >
+              <ProjectCard
+                key={project.id}
+                project={project}
+                isExpanded={expandedProjectId === project.id}
+                onToggleExpand={() =>
+                  setExpandedProjectId(
+                    expandedProjectId === project.id ? null : project.id
+                  )
+                }
+              />
+            </div>
           ))}
         </div>
+        {!hasMore && (
+          <div className="text-center text-gray-500 mt-4">End of Results</div>
+        )}
 
         <FilterModal
           isOpen={isFilterModalOpen}

@@ -76,8 +76,8 @@ export function FilterModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
+      <DialogContent className="w-[425px]">
+        <DialogHeader className="text-left">
           <DialogTitle>Filter by Category</DialogTitle>
         </DialogHeader>
         <div className="grid grid-cols-2 gap-4 py-4 max-h-[60vh] overflow-y-auto">
@@ -97,7 +97,7 @@ export function FilterModal({
             </div>
           ))}
         </div>
-        <DialogFooter className="flex space-x-2">
+        <DialogFooter className="flex flex-row justify-end space-x-2 sm:flex-row">
           <Button
             variant="secondary"
             onClick={handleClearAll}
