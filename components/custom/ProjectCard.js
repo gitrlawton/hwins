@@ -86,12 +86,20 @@ export default function ProjectCard({ project, isExpanded, onToggleExpand }) {
           <div className="mt-6 grid gap-6 md:grid-cols-2">
             <div className="space-y-4">
               <div className="aspect-video rounded-lg bg-muted">
-                <iframe
-                  src={project.video_url}
-                  className="w-full h-full rounded-lg"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                />
+                {project.video_url ? (
+                  <iframe
+                    src={project.video_url}
+                    className="w-full h-full rounded-lg"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                ) : (
+                  <div className="w-full h-full bg-black rounded-lg flex items-center justify-center text-white cursor-default">
+                    <span className="text-lg font-semibold">
+                      This user did not record a demo
+                    </span>
+                  </div>
+                )}
               </div>
               {/* <div className="space-y-2">
                 <Textarea
@@ -165,24 +173,32 @@ export default function ProjectCard({ project, isExpanded, onToggleExpand }) {
                 <div>
                   <h4 className="font-medium mb-2">Creators</h4>
                   <div className="flex flex-wrap gap-2">
-                    {project.creators.map((creator) => (
-                      <a
-                        key={creator.name}
-                        href={creator.profile_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <Avatar className="ring-1 ring-gray-300 dark:ring-gray-700">
-                          <AvatarImage
-                            src={creator.profile_picture}
-                            alt={creator.name}
-                          />
-                          <AvatarFallback>
-                            {creator.name.charAt(0)}
-                          </AvatarFallback>
-                        </Avatar>
-                      </a>
-                    ))}
+                    {project.creators.length > 0 ? (
+                      project.creators.map((creator) => (
+                        <a
+                          key={creator.name}
+                          href={creator.profile_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <Avatar className="ring-1 ring-gray-300 dark:ring-gray-700">
+                            <AvatarImage
+                              src={creator.profile_picture}
+                              alt={creator.name}
+                            />
+                            <AvatarFallback>
+                              {creator.name.charAt(0)}
+                            </AvatarFallback>
+                          </Avatar>
+                        </a>
+                      ))
+                    ) : (
+                      <div className="w-10 h-10 ring-1 bg-neutral-100 dark:bg-stone-950 ring-gray-300 dark:ring-gray-700 rounded-full flex items-center justify-center cursor-default">
+                        <span className="text-md text-gray-500 dark:text-gray-300 font-light">
+                          ?
+                        </span>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>

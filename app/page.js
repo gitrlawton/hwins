@@ -26,6 +26,8 @@ export default function ProjectsPage() {
   const [expandedProjectId, setExpandedProjectId] = useState(null);
   const [activeFilters, setActiveFilters] = useState([]);
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
+  const [selectedHackathon, setSelectedHackathon] =
+    useState("Nosu AI Hackathon");
   const [isLoading, setIsLoading] = useState(true);
   const [mounted, setMounted] = useState(false);
   const [displayedProjects, setDisplayedProjects] = useState([]);
@@ -40,20 +42,32 @@ export default function ProjectsPage() {
     setMounted(true);
   }, []);
 
-  // Hook to reset expanded project when search term changes
+  // Hook to reset expanded project when search term, sort, or selected hackathon changes
   useEffect(() => {
     setExpandedProjectId(null);
-  }, [searchTerm]);
+  }, [searchTerm, sortBy, selectedHackathon]);
 
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const projectsCollection = collection(db, "brainrot_winners");
-        const projectSnapshot = await getDocs(projectsCollection);
-        const projectList = projectSnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
+        const hackathonCollections = [
+          { name: "Brainrot Hackathon", collection: "brainrot_winners" },
+          { name: "Nosu AI Hackathon", collection: "nosu_ai_winners" },
+        ];
+
+        const projectPromises = hackathonCollections.map(async (hackathon) => {
+          const projectsCollection = collection(db, hackathon.collection);
+          const projectSnapshot = await getDocs(projectsCollection);
+          return projectSnapshot.docs.map((doc) => ({
+            id: doc.id,
+            hackathon_name: hackathon.name,
+            ...doc.data(),
+          }));
+        });
+
+        const projectLists = await Promise.all(projectPromises);
+        const projectList = projectLists.flat();
+
         setProjects(projectList);
       } catch (error) {
         console.error("Error fetching projects:", error);
@@ -68,7 +82,17 @@ export default function ProjectsPage() {
   }, []);
 
   const filteredProjects = [...projects]
-    // First, filter by search term
+    // First, filter by hackathon selected
+    .filter((project) => {
+      if (selectedHackathon === "Brainrot Hackathon") {
+        return project.hackathon_name === "Brainrot Hackathon";
+      } else if (selectedHackathon === "Nosu AI Hackathon") {
+        return project.hackathon_name === "Nosu AI Hackathon";
+      } else if (selectedHackathon === "All") {
+        return true;
+      }
+    })
+    // then, filter by search term
     .filter((project) => {
       if (!searchTerm) return true; // Show all if no search term
       const searchTerms = searchTerm.toLowerCase().split(/\s+/);
@@ -104,9 +128,21 @@ export default function ProjectsPage() {
         if (isNaN(dateB)) return -1;
         if (isNaN(dateA) && isNaN(dateB)) return 0;
 
-        return dateB - dateA;
+        // First, compare by date
+        const dateComparison = dateB - dateA;
+
+        // If dates are the same, sort alphabetically
+        if (dateComparison === 0) {
+          return a.project_name
+            .toLowerCase()
+            .localeCompare(b.project_name.toLowerCase());
+        }
+
+        return dateComparison;
       }
-      return a.project_name.localeCompare(b.project_name);
+      return a.project_name
+        .toLowerCase()
+        .localeCompare(b.project_name.toLowerCase());
     });
 
   // Function to load more projects as user scrolls
@@ -140,7 +176,7 @@ export default function ProjectsPage() {
     const initialProjects = filteredProjects.slice(0, 20);
     setDisplayedProjects(initialProjects);
     setHasMore(filteredProjects.length > 20);
-  }, [activeFilters, searchTerm, sortBy]); // Add any other filter-related dependencies
+  }, [activeFilters, searchTerm, sortBy, selectedHackathon]); // Add any other filter-related dependencies
 
   // Use useEffect to manage initial project display
   useEffect(() => {
@@ -231,14 +267,21 @@ export default function ProjectsPage() {
             <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
               Hackathon
             </label>
-            <Select value="Brainrot Hackathon">
+            <Select
+              value={selectedHackathon}
+              onValueChange={setSelectedHackathon}
+            >
               <SelectTrigger className="w-full bg-neutral-100 dark:bg-neutral-900">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent className="w-full bg-neutral-100 dark:bg-neutral-900">
+                <SelectItem value="Nosu AI Hackathon">
+                  Nosu AI Hackathon
+                </SelectItem>
                 <SelectItem value="Brainrot Hackathon">
                   Brainrot Hackathon
                 </SelectItem>
+                <SelectItem value="All">All</SelectItem>
               </SelectContent>
             </Select>
           </div>
